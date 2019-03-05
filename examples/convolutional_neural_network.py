@@ -3,9 +3,9 @@ import numpy as np
 import paradox as pd
 
 # 调用paradox的MNIST接口读取数据。
-mnist_data = pd.data.MNIST('E:/mnist').read()
+mnist_data = pd.data.MNIST('E:/MNSIT').read()
 
-model_save_path = 'cnn.bin'
+model_save_path = 'E:/MNSIT/cnn.bin'
 batch_size = 100
 
 

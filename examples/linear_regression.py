@@ -1,14 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import paradox as pd
-
-# 随机生成点的个数。
+#import pdb
+# The number of randomly generated instance
 points_sum = 200
 
 x_data = []
 y_data = []
 
-# 生成y = 2 * x + 1直线附近的随机点。
+# Generate instances around the line: y = 2 * x + 1
 for _ in range(points_sum):
     x = np.random.normal(0, 2)
     y = 2 * x + 1 + np.random.normal(0, 2)
@@ -17,17 +17,20 @@ for _ in range(points_sum):
 x_np = np.array(x_data)
 y_np = np.array(y_data)
 
-# 定义符号。
+# Define the place holder, constant name
 X = pd.Constant(x_np, name='x')
 Y = pd.Constant(y_np, name='y')
 w = pd.Variable(0, name='w')
 b = pd.Variable(0, name='b')
-
+#pdb.set_trace()
+# Loss uses the Mean Square Error
 # 使用最小二乘误差。
 loss = pd.reduce_mean((w * X + b - Y) ** 2)
 
+# Create the Loss Symbol Calculation Engine
 # 创建loss计算引擎，申明变量为w和b。
 loss_engine = pd.Engine(loss, [w, b])
+#pdb.set_trace()
 
 # 梯度下降optimizer。
 optimizer = pd.GradientDescentOptimizer(0.1)
@@ -47,4 +50,5 @@ plt.title('Paradox implement Linear Regression')
 plt.plot(x_data, y_data, 'ro', label='Data')
 plt.plot(x_data, w_value * x_data + b_value, label='Regression')
 plt.legend()
+plt.show()
 plt.show()

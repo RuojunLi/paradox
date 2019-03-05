@@ -41,10 +41,15 @@ class TrainingStatePlugin(Plugin):
     def __init__(self, state_cycle: int=100, auto_cycle: bool=True):
         self.state_cycle = state_cycle
         self.start_time = None
+        self.start_time_epoch = None
         self.cycle_start_time = None
+        self.cycle_start_time_epoch = None
         self.iteration_start = 0
+        self.epoch_start = 0
         self.count = 0
+        self.count_epoch = 0
         self.average_speed = 0
+        self.average_speed_epoch = 0
         self.auto_cycle = auto_cycle
         self.cycle = 1
 
@@ -76,12 +81,30 @@ class TrainingStatePlugin(Plugin):
             self.count += 1
             self.cycle = int(self.network.iteration / self.state_cycle + 1.5)
             loss_value = self.network.engine.value()
-            print('Training State [epoch = {}/{}, loss = {:.8f}, speed = {:.2f}(iterations/s)]'.format(
+            print('Training State [epoch = {}/{},iteration = {}/{}, loss = {:.8f}, speed = {:.2f}(iterations/s)]'.format(
                 self.network.epoch,
                 self.network.epochs,
+                self.network.iteration,
+                self.network.iterations,
                 loss_value,
                 speed
             ))
+
+    def begin_epoch(self):
+        self.cycle_start_time_epoch = time.time()
+        self.epoch_start = self.network.epoch
+
+    def end_epoch(self):
+        speed = (self.network.epoch - self.epoch_start + 1) / (time.time() - self.cycle_start_time_epoch)
+        self.average_speed_epoch = self.average_speed_epoch * (self.count_epoch / (self.count_epoch + 1)) + speed / (self.count_epoch + 1)
+        self.count_epoch += 1
+        loss_value = self.network.engine.value()
+        print('Training State [epoch = {}/{}, loss = {:.8f}, speed = {:.2f}(epochs/s)]'.format(
+            self.network.epoch,
+            self.network.epochs,
+            loss_value,
+            speed
+        ))
 
 
 class VariableMonitorPlugin(Plugin):
