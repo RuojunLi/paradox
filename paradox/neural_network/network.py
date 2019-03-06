@@ -220,10 +220,10 @@ class Network:
                             self.__input_symbol: data[i: min([i + batch_size, data_scale])],
                             target_symbol: target[i: min([i + batch_size, data_scale])]
                         }
-                    #self.run_plugin('begin_iteration')
+                    self.run_plugin('begin_iteration')
                     self.__optimizer.minimize(self.engine)
                     self.iteration += 1
-                    #self.run_plugin('end_iteration')
+                    self.run_plugin('end_iteration')
                 self.run_plugin('end_epoch')
         except KeyboardInterrupt:
             print('<Keyboard Interrupt>')

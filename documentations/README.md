@@ -8,7 +8,7 @@
 
 * 基本原理
     * [符号计算](symbolic_computing.md)
-    * 自动求导
+    * [自动求导](auto_grad.md)
     * Symbol
     * Operator
     * Engine
